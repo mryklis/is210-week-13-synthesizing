@@ -11,3 +11,14 @@ class PickleCache(object):
         self.__file_path = file_path
         self.__data = {}
         self.autosync = autosync
+
+
+    def __setitem__(self, key, value):
+
+        self.__data[key] = value
+
+    def __len__(self):
+
+        return len(self.__data)
+
+    
