@@ -16,6 +16,8 @@ class PickleCache(object):
     def __setitem__(self, key, value):
 
         self.__data[key] = value
+        if self.autosync is True:
+            self.flush()
 
 
     def __len__(self):
@@ -37,4 +39,23 @@ class PickleCache(object):
             del self.__data[key]
         except LookupError as err:
             raise err
-        
+
+        if self.autosync is True:
+            self.flush()
+            
+
+    def load(self):
+
+        if os.path.exists(self.__file_path) \
+           and os.path.getsize(self.__file_path) != 0:
+            with open(self.__file_path, 'r') as dataf:
+                self.__data = pickle.load(dataf)
+        dataf.close()
+        self.load()
+
+
+    def flush(self):
+
+        with open(self.__file_path, 'w') as dataf:
+            pickle.dump(self.__data, dataf)
+        dataf.close()
